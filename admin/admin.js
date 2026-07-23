@@ -55,7 +55,7 @@ async function loadReleases() {
   const list = $('#release-list');
   list.innerHTML = '<p class="empty">Chargement des releases…</p>';
   try {
-    const { latest, releases } = await request('/api/admin/releases');
+    const { latest, releases } = await request('/api/admin-releases');
     latestVersion = latest.version;
     $('#current-version').textContent = `Folio ${latest.version}`;
     $('#current-date').textContent = formatDate(latest.publishedAt);
@@ -87,7 +87,7 @@ async function loadReleases() {
         activate.disabled = true;
         activate.textContent = 'Activation…';
         try {
-          await request('/api/admin/activate', {
+          await request('/api/admin-activate', {
             method: 'POST',
             body: JSON.stringify({ version: release.version })
           });
@@ -107,7 +107,7 @@ async function loadReleases() {
 
 async function boot() {
   try {
-    const session = await request('/api/admin/session');
+    const session = await request('/api/admin-session');
     githubConfigured = session.githubConfigured;
     setAuthenticated(session.authenticated);
     if (session.authenticated) await loadReleases();
@@ -124,7 +124,7 @@ loginForm.addEventListener('submit', async event => {
   button.disabled = true;
   message($('#login-error'), '');
   try {
-    await request('/api/admin/login', {
+    await request('/api/admin-login', {
       method: 'POST',
       body: JSON.stringify({ password: $('#admin-password').value })
     });
@@ -139,7 +139,7 @@ loginForm.addEventListener('submit', async event => {
 });
 
 $('#logout-button').addEventListener('click', async () => {
-  await request('/api/admin/logout', { method: 'POST', body: '{}' }).catch(() => {});
+  await request('/api/admin-logout', { method: 'POST', body: '{}' }).catch(() => {});
   setAuthenticated(false);
 });
 
@@ -203,7 +203,7 @@ releaseForm.addEventListener('submit', async event => {
     setProgress(5, 'Préparation de la release…');
     const blob = await upload(`releases/Folio-${version}.dmg`, file, {
       access: 'public',
-      handleUploadUrl: '/api/admin/upload',
+      handleUploadUrl: '/api/admin-upload',
       multipart: file.size > 50 * 1024 * 1024,
       clientPayload: JSON.stringify({
         version,
