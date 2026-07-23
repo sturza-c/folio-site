@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="theme-color" content="#0d0d0e" />
+  <title>Folio — Publication</title>
+  <link rel="icon" href="/assets/folio-icon.png" />
+  <link rel="stylesheet" href="/admin/admin.css?v=20260723-1" />
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Retourner sur Folio">
+      <img src="/assets/folio-icon.png" alt="" />
+      <span>Folio</span>
+    </a>
+    <div>
+      <span class="private-badge">ESPACE PRIVÉ</span>
+      <button id="logout-button" class="text-button" type="button" hidden>Se déconnecter</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="login-view" class="login-view">
+      <div class="intro">
+        <p>ADMINISTRATION</p>
+        <h1>Publier Folio,<br />sans toucher au code.</h1>
+        <span>Dépose le nouveau fichier DMG. Le site et les mises à jour de l’app pointeront automatiquement vers cette version.</span>
+      </div>
+      <form id="login-form" class="panel login-panel">
+        <img src="/assets/folio-icon.png" alt="" />
+        <h2>Connexion</h2>
+        <p>Cette page est réservée au créateur de Folio.</p>
+        <label>
+          <span>Mot de passe</span>
+          <input id="admin-password" type="password" autocomplete="current-password" required autofocus />
+        </label>
+        <button class="primary" type="submit">Ouvrir l’administration</button>
+        <p id="login-error" class="message error" role="alert"></p>
+      </form>
+    </section>
+
+    <section id="admin-view" class="admin-view" hidden>
+      <div class="page-heading">
+        <div>
+          <p>RELEASES FOLIO</p>
+          <h1>Une nouvelle version.<br />Un seul endroit.</h1>
+        </div>
+        <article class="current-release">
+          <small>VERSION EN LIGNE</small>
+          <strong id="current-version">—</strong>
+          <span id="current-date">Chargement…</span>
+          <b id="release-status">VÉRIFICATION…</b>
+          <a id="current-download" href="/api/download">Tester le téléchargement ↗</a>
+        </article>
+      </div>
+
+      <div class="workspace">
+        <form id="release-form" class="panel release-form">
+          <div class="panel-heading">
+            <span>01</span>
+            <div><h2>Publier un DMG</h2><p>Le fichier existant reste disponible dans l’historique.</p></div>
+          </div>
+
+          <label class="file-drop" id="file-drop">
+            <input id="dmg-file" type="file" accept=".dmg,application/x-apple-diskimage,application/octet-stream" required />
+            <span class="file-icon">DMG</span>
+            <strong id="file-title">Glisse Folio.dmg ici</strong>
+            <small id="file-detail">ou clique pour choisir le fichier</small>
+          </label>
+
+          <div class="form-grid">
+            <label>
+              <span>Version</span>
+              <input id="release-version" type="text" inputmode="decimal" placeholder="1.4.0" pattern="[0-9]+(\.[0-9]+){1,3}([+-][0-9A-Za-z.-]+)?" required />
+            </label>
+            <label>
+              <span>Build</span>
+              <input id="release-build" type="text" inputmode="numeric" value="1" required />
+            </label>
+          </div>
+          <label>
+            <span>Notes de version</span>
+            <textarea id="release-notes" rows="5" placeholder="Ce qui change dans cette version…"></textarea>
+          </label>
+
+          <div id="publish-progress" class="progress" hidden>
+            <div><span id="progress-label">Préparation…</span><b id="progress-value">0 %</b></div>
+            <i><span id="progress-bar"></span></i>
+          </div>
+          <p id="publish-message" class="message" role="status"></p>
+          <button id="publish-button" class="primary publish-button" type="submit">
+            <span>Publier la nouvelle version</span><b>→</b>
+          </button>
+        </form>
+
+        <aside class="release-side">
+          <article class="panel process">
+            <div class="panel-heading">
+              <span>02</span>
+              <div><h2>Ce qui se passe ensuite</h2><p>Tout est synchronisé automatiquement.</p></div>
+            </div>
+            <ol>
+              <li><b>Fichier versionné</b><span>Le DMG est conservé sous son numéro de version.</span></li>
+              <li><b>Site mis à jour</b><span>Le bouton Télécharger sert immédiatement la nouvelle version.</span></li>
+              <li><b>App avertie</b><span>Folio détecte la release lors de sa prochaine vérification.</span></li>
+            </ol>
+          </article>
+          <article class="panel warning">
+            <strong>Avant de publier</strong>
+            <p>Ouvre le DMG sur un autre compte Mac et vérifie le numéro de version. Une release ne remplace jamais silencieusement une version portant le même numéro.</p>
+          </article>
+        </aside>
+      </div>
+
+      <section class="history">
+        <div class="history-heading">
+          <div><p>HISTORIQUE</p><h2>Versions publiées</h2></div>
+          <button id="refresh-releases" class="text-button" type="button">Actualiser</button>
+        </div>
+        <div id="release-list" class="release-list" aria-live="polite"></div>
+      </section>
+    </section>
+  </main>
+
+  <template id="release-template">
+    <article class="release-row">
+      <div><span class="release-dot"></span><strong></strong><small></small></div>
+      <p></p>
+      <span class="release-size"></span>
+      <div class="release-actions"><a target="_blank" rel="noreferrer">DMG ↗</a><button type="button">Remettre en ligne</button></div>
+    </article>
+  </template>
+
+  <script type="module" src="/admin/admin.js?v=20260723-1"></script>
+</body>
+</html>
