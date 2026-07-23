@@ -10,12 +10,37 @@ Folio Web reprend les principaux modèles de l’application macOS : navigation 
 
 Ouvrez `index.html` directement dans votre navigateur, ou servez le dossier avec n’importe quel serveur statique.
 
-## Mise en ligne
+## Publication du site
 
-Le dossier peut être déposé tel quel sur Vercel, Netlify ou Cloudflare Pages.
+Le projet est relié à Vercel. Les pages de présentation restent statiques, et
+les fonctions dans `api/` gèrent les releases Folio.
 
-## Liens à personnaliser
+Variables Vercel requises :
 
-- Les boutons « Télécharger » servent `assets/Folio.dmg` et ouvrent le guide d’installation macOS.
+- `ADMIN_PASSWORD` : mot de passe de `/admin`.
+- `ADMIN_SESSION_SECRET` : secret aléatoire long utilisé pour signer la session.
+- `BLOB_READ_WRITE_TOKEN` : ajouté automatiquement lorsqu’un store Vercel Blob
+  est relié au projet.
+- `GITHUB_RELEASE_TOKEN` : jeton GitHub à portée limitée avec accès en écriture
+  aux releases du dépôt `sturza-c/folio`.
+- `GITHUB_RELEASE_REPOSITORY` : facultatif, vaut `sturza-c/folio` par défaut.
 
-Aucune donnée n’est envoyée.
+## Publier une nouvelle version de Folio
+
+1. Ouvrir `https://folioapp.ch/admin`.
+2. Se connecter.
+3. Déposer le nouveau fichier `.dmg`.
+4. Indiquer la version, le build et les notes de version.
+5. Publier.
+
+Le DMG est stocké sous un nom versionné. `/api/download` redirige toujours vers
+la version active et `/api/releases/latest` expose le même manifeste au
+vérificateur de mises à jour de l’application. L’administration permet aussi de
+réactiver une ancienne version sans supprimer les fichiers récents.
+
+Quand `GITHUB_RELEASE_TOKEN` est configuré, la même publication met également
+à jour la release GitHub et son fichier `Folio.dmg`. Les versions déjà installées
+de Folio la vérifient et peuvent ainsi proposer la nouvelle version.
+
+Si le stockage n’est pas encore configuré, le téléchargement retombe sur
+`assets/Folio.dmg` afin que le site reste fonctionnel.

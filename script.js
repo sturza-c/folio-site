@@ -21,7 +21,9 @@ const profileDialog = $('#profile-dialog');
 const downloadDialog = $('#download-dialog');
 const supportDialog = $('#support-dialog');
 const toast = $('.toast');
-const folioDownloadUrl = 'assets/Folio.dmg?build=20260718-vf';
+// The release manager updates this permanent endpoint. It redirects to the
+// active version without requiring a site rebuild.
+const folioDownloadUrl = '/api/download';
 
 const initialPages = [
   {
